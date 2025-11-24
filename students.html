@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management | College System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* CSS Styles */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), 
+                              url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--secondary-color);
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            margin-right: 15px;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links li a i {
+            margin-right: 8px;
+        }
+
+        .nav-links li a:hover, .nav-links li.active a {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        .user-dropdown a {
+            color: var(--dark-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown a:hover {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+        }
+
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .main-content {
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+        }
+
+        .page-header h2 i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #bdc3c7;
+        }
+
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            margin-right: 15px;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-options select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            min-width: 180px;
+        }
+
+        .table-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: var(--light-color);
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+
+        .edit-btn:hover {
+            background-color: #e67e22;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .view-btn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .table-footer {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px;
+            background-color: var(--light-color);
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+        }
+
+        .pagination button {
+            background-color: white;
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #pageInfo {
+            margin: 0 15px;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-btn:hover {
+            color: var(--danger-color);
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 250px;
+                height: calc(100vh - 80px);
+                background-color: var(--secondary-color);
+                flex-direction: column;
+                transition: all 0.3s ease;
+                padding-top: 20px;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .search-filter {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-box {
+                margin-right: 0;
+            }
+
+            .filter-options {
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px;
+            }
+
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+
+            .main-content {
+                padding: 15px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <img src="img/Screenshot 2025-04-27 152655.png" alt="College Logo">
+            <h1>College Management System</h1>
+        </div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown active"><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+            <li class="dropdown"><a href="faculty.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+            <li class="dropdown"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+            <li><a href="finance.html"><i class="fas fa-money-bill-wave"></i> Finance</a></li>
+            <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        </ul>
+        
+        <div class="user-profile">
+            
+            <span>Admin</span>
+            <div class="user-dropdown">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h2><i class="fas fa-user-graduate"></i> Student Management</h2>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="showAddStudentForm()">
+                    <i class="fas fa-plus"></i> Add Student
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+        </div>
+        
+        <div class="search-filter">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="studentSearch" placeholder="Search students...">
+            </div>
+            <div class="filter-options">
+                <select id="departmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="CS">Computer Science</option>
+                    <option value="EE">Electrical Engineering</option>
+                    <option value="ME">Mechanical Engineering</option>
+                </select>
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                    <option value="1">First Year</option>
+                    <option value="2">Second Year</option>
+                    <option value="3">Third Year</option>
+                    <option value="4">Fourth Year</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Year</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Data will be loaded via JavaScript -->
+                </tbody>
+            </table>
+            <div class="table-footer">
+                <div class="pagination">
+                    <button id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <span id="pageInfo">Page 1 of 5</span>
+                    <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Student Modal -->
+        <div id="addStudentModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h3>Add New Student</h3>
+                <form id="addStudentForm">
+                    <div class="form-group">
+                        <label for="studentName">Full Name</label>
+                        <input type="text" id="studentName" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="studentId">Student ID</label>
+                            <input type="text" id="studentId" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentDept">Department</label>
+                            <select id="studentDept" required>
+                                <option value="">Select Department</option>
+                                <option value="CS">Computer Science</option>
+                                <option value="EE">Electrical Engineering</option>
+                                <option value="ME">Mechanical Engineering</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="studentYear">Year</label>
+                            <select id="studentYear" required>
+                                <option value="1">First Year</option>
+                                <option value="2">Second Year</option>
+                                <option value="3">Third Year</option>
+                                <option value="4">Fourth Year</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentDob">Date of Birth</label>
+                            <input type="date" id="studentDob" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentEmail">Email</label>
+                        <input type="email" id="studentEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentPhone">Phone</label>
+                        <input type="tel" id="studentPhone" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Student</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for Student Management System
+        
+        // Sample student data
+        const students = [
+            { id: "S001", name: "John Doe", department: "CS", year: "2", email: "john.doe@example.com", phone: "555-1234" },
+            { id: "S002", name: "Jane Smith", department: "EE", year: "3", email: "jane.smith@example.com", phone: "555-5678" },
+            { id: "S003", name: "Michael Johnson", department: "ME", year: "1", email: "michael.j@example.com", phone: "555-9012" },
+            { id: "S004", name: "Emily Davis", department: "CS", year: "4", email: "emily.d@example.com", phone: "555-3456" },
+            { id: "S005", name: "Robert Wilson", department: "EE", year: "2", email: "robert.w@example.com", phone: "555-7890" },
+            { id: "S006", name: "Sarah Brown", department: "ME", year: "3", email: "sarah.b@example.com", phone: "555-2345" },
+            { id: "S007", name: "David Taylor", department: "CS", year: "1", email: "david.t@example.com", phone: "555-6789" },
+            { id: "S008", name: "Jennifer Martinez", department: "EE", year: "4", email: "jennifer.m@example.com", phone: "555-0123" },
+            { id: "S009", name: "Thomas Anderson", department: "ME", year: "2", email: "thomas.a@example.com", phone: "555-4567" },
+            { id: "S010", name: "Lisa Jackson", department: "CS", year: "3", email: "lisa.j@example.com", phone: "555-8901" }
+        ];
+
+        // DOM elements
+        const studentsTable = document.getElementById('studentsTable').getElementsByTagName('tbody')[0];
+        const studentSearch = document.getElementById('studentSearch');
+        const departmentFilter = document.getElementById('departmentFilter');
+        const yearFilter = document.getElementById('yearFilter');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const pageInfo = document.getElementById('pageInfo');
+        const addStudentModal = document.getElementById('addStudentModal');
+        const addStudentForm = document.getElementById('addStudentForm');
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        // Pagination variables
+        let currentPage = 1;
+        const rowsPerPage = 5;
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(students);
+            setupEventListeners();
+        });
+
+        // Render the student table
+        function renderTable(data) {
+            studentsTable.innerHTML = '';
+            
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedData = data.slice(start, end);
+            
+            if (paginatedData.length === 0) {
+                const row = studentsTable.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 7;
+                cell.textContent = 'No students found';
+                cell.style.textAlign = 'center';
+                cell.style.padding = '20px';
+                return;
+            }
+            
+            paginatedData.forEach(student => {
+                const row = studentsTable.insertRow();
+                
+                row.insertCell().textContent = student.id;
+                row.insertCell().textContent = student.name;
+                row.insertCell().textContent = getDepartmentName(student.department);
+                row.insertCell().textContent = getYearName(student.year);
+                row.insertCell().textContent = student.email;
+                row.insertCell().textContent = student.phone;
+                
+                const actionsCell = row.insertCell();
+                actionsCell.innerHTML = `
+                    <button class="action-btn view-btn" onclick="viewStudent('${student.id}')"><i class="fas fa-eye"></i></button>
+                    <button class="action-btn edit-btn" onclick="editStudent('${student.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="action-btn delete-btn" onclick="deleteStudent('${student.id}')"><i class="fas fa-trash"></i></button>
+                `;
+            });
+            
+            updatePaginationInfo(data.length);
+        }
+
+        // Get department full name
+        function getDepartmentName(code) {
+            const departments = {
+                'CS': 'Computer Science',
+                'EE': 'Electrical Engineering',
+                'ME': 'Mechanical Engineering'
+            };
+            return departments[code] || code;
+        }
+
+        // Get year name
+        function getYearName(year) {
+            const years = {
+                '1': 'First Year',
+                '2': 'Second Year',
+                '3': 'Third Year',
+                '4': 'Fourth Year'
+            };
+            return years[year] || year;
+        }
+
+        // Update pagination information
+        function updatePaginationInfo(totalItems) {
+            const totalPages = Math.ceil(totalItems / rowsPerPage);
+            pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        // Filter students based on search and filters
+        function filterStudents() {
+            const searchTerm = studentSearch.value.toLowerCase();
+            const department = departmentFilter.value;
+            const year = yearFilter.value;
+            
+            const filteredStudents = students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
+                                      student.id.toLowerCase().includes(searchTerm) || 
+                                      student.email.toLowerCase().includes(searchTerm);
+                const matchesDept = department === '' || student.department === department;
+                const matchesYear = year === '' || student.year === year;
+                
+                return matchesSearch && matchesDept && matchesYear;
+            });
+            
+            currentPage = 1;
+            renderTable(filteredStudents);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            studentSearch.addEventListener('input', filterStudents);
+            departmentFilter.addEventListener('change', filterStudents);
+            yearFilter.addEventListener('change', filterStudents);
+            
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    filterStudents();
+                }
+            });
+            
+            nextPageBtn.addEventListener('click', () => {
+                const filteredStudents = getFilteredStudents();
+                const totalPages = Math.ceil(filteredStudents.length / rowsPerPage);
+                
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    filterStudents();
+                }
+            });
+            
+            addStudentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNewStudent();
+            });
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+        }
+
+        // Get currently filtered students
+        function getFilteredStudents() {
+            const searchTerm = studentSearch.value.toLowerCase();
+            const department = departmentFilter.value;
+            const year = yearFilter.value;
+            
+            return students.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
+                                      student.id.toLowerCase().includes(searchTerm) || 
+                                      student.email.toLowerCase().includes(searchTerm);
+                const matchesDept = department === '' || student.department === department;
+                const matchesYear = year === '' || student.year === year;
+                
+                return matchesSearch && matchesDept && matchesYear;
+            });
+        }
+
+        // Show add student modal
+        function showAddStudentForm() {
+            addStudentModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close modal
+        function closeModal() {
+            addStudentModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            addStudentForm.reset();
+        }
+
+        // Add new student
+        function addNewStudent() {
+            const newStudent = {
+                id: document.getElementById('studentId').value,
+                name: document.getElementById('studentName').value,
+                department: document.getElementById('studentDept').value,
+                year: document.getElementById('studentYear').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                dob: document.getElementById('studentDob').value
+            };
+            
+            students.unshift(newStudent);
+            closeModal();
+            filterStudents();
+            
+            // Show success message
+            alert('Student added successfully!');
+        }
+
+        // View student details
+        function viewStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                alert(`Student Details:\n\nID: ${student.id}\nName: ${student.name}\nDepartment: ${getDepartmentName(student.department)}\nYear: ${getYearName(student.year)}\nEmail: ${student.email}\nPhone: ${student.phone}`);
+            }
+        }
+
+        // Edit student
+        function editStudent(studentId) {
+            const student = students.find(s => s.id === studentId);
+            if (student) {
+                // In a real app, you would populate a form with the student data
+                alert(`Editing student: ${student.name}\n\nThis would open an edit form in a real application.`);
+            }
+        }
+
+        // Delete student
+        function deleteStudent(studentId) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                const index = students.findIndex(s => s.id === studentId);
+                if (index !== -1) {
+                    students.splice(index, 1);
+                    filterStudents();
+                    alert('Student deleted successfully!');
+                }
+            }
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            if (e.target === addStudentModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

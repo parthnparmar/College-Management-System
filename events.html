@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Management | College System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-blend-mode: overlay;
+            background-color: rgba(245, 245, 245, 0.9);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: #2c3e50;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+        }
+
+        .logo img {
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links li a:hover {
+            color: #3498db;
+        }
+
+        .nav-links li.active a {
+            color: #3498db;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            border-radius: 50%;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            min-width: 180px;
+            z-index: 100;
+        }
+
+        .user-dropdown a {
+            display: block;
+            padding: 8px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 30px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-view {
+            background-color: transparent;
+            border: 1px solid #bdc3c7;
+            color: #7f8c8d;
+        }
+
+        .btn-view.active {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+
+        .view-options {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Events Container */
+        .events-container {
+            display: flex;
+            gap: 30px;
+        }
+
+        .events-calendar {
+            flex: 3;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .upcoming-events {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .upcoming-events h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .event-card {
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .event-card h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .event-card .event-date {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            padding: 25px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        select[multiple] {
+            height: 120px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Event Details Styles */
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .event-meta div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #7f8c8d;
+        }
+
+        .event-description, .event-participants {
+            margin-bottom: 20px;
+        }
+
+        .event-description h4, .event-participants h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .event-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* FullCalendar Overrides */
+        .fc {
+            font-family: inherit;
+        }
+
+        .fc-toolbar-title {
+            font-size: 1.3rem;
+            color: #2c3e50;
+        }
+
+        .fc-button {
+            background-color: #3498db !important;
+            border: none !important;
+        }
+
+        .fc-button:hover {
+            background-color: #2980b9 !important;
+        }
+
+        .fc-button-primary:not(:disabled).fc-button-active {
+            background-color: #2980b9 !important;
+        }
+
+        .fc-event {
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 3px 5px;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .events-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 15px;
+            }
+
+            .menu-toggle {
+                display: block;
+                order: 1;
+            }
+
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .logo h1 {
+                font-size: 1.2rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <img src="img/Screenshot 2025-04-27 152655.png" alt="College Logo">
+            <h1>College Management System</h1>
+        </div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown"><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+            <li class="dropdown"><a href="faculty.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+            <li class="dropdown"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+            <li class="dropdown"><a href="finance.html"><i class="fas fa-money-bill-wave"></i> Finance</a></li>
+            <li class="dropdown active"><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        </ul>
+        
+        <div class="user-profile">
+
+            <span>Admin</span>
+            <div class="user-dropdown">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h2><i class="fas fa-calendar-alt"></i> Event Management</h2>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="showAddEventForm()">
+                    <i class="fas fa-plus"></i> Add Event
+                </button>
+                <div class="view-options">
+                    <button class="btn btn-view active" id="monthView">Month</button>
+                    <button class="btn btn-view" id="weekView">Week</button>
+                    <button class="btn btn-view" id="dayView">Day</button>
+                    <button class="btn btn-view" id="listView">List</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="events-container">
+            <div class="events-calendar">
+                <div id="calendar"></div>
+            </div>
+            
+            <div class="upcoming-events">
+                <h3><i class="fas fa-bell"></i> Upcoming Events</h3>
+                <div class="events-list" id="upcomingEvents">
+                    <!-- Events will be loaded via JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Event Modal -->
+        <div id="addEventModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h3>Add New Event</h3>
+                <form id="addEventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title</label>
+                        <input type="text" id="eventTitle" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="eventStartDate">Start Date</label>
+                            <input type="datetime-local" id="eventStartDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="eventEndDate">End Date</label>
+                            <input type="datetime-local" id="eventEndDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventLocation">Location</label>
+                        <input type="text" id="eventLocation">
+                    </div>
+                    <div class="form-group">
+                        <label for="eventCategory">Category</label>
+                        <select id="eventCategory">
+                            <option value="academic">Academic</option>
+                            <option value="cultural">Cultural</option>
+                            <option value="sports">Sports</option>
+                            <option value="meeting">Meeting</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="eventParticipants">Participants</label>
+                        <select id="eventParticipants" multiple>
+                            <option value="all">All Students</option>
+                            <option value="faculty">All Faculty</option>
+                            <option value="cs">Computer Science Dept</option>
+                            <option value="ee">Electrical Engineering Dept</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Event</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Event Details Modal -->
+        <div id="eventDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h3 id="eventDetailsTitle">Event Title</h3>
+                <div class="event-meta">
+                    <div><i class="fas fa-calendar-day"></i> <span id="eventDetailsDate">Date and time</span></div>
+                    <div><i class="fas fa-map-marker-alt"></i> <span id="eventDetailsLocation">Location</span></div>
+                    <div><i class="fas fa-tag"></i> <span id="eventDetailsCategory">Category</span></div>
+                </div>
+                <div class="event-description">
+                    <h4>Description</h4>
+                    <p id="eventDetailsDescription">Event description goes here...</p>
+                </div>
+                <div class="event-participants">
+                    <h4>Participants</h4>
+                    <ul id="eventDetailsParticipants">
+                        <!-- Participants will be listed here -->
+                    </ul>
+                </div>
+                <div class="event-actions">
+                    <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+                    <button class="btn btn-danger" id="deleteEventBtn">Delete Event</button>
+                    <button class="btn btn-primary" id="editEventBtn">Edit Event</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
+    <script>
+        // Sample event data
+        let events = [
+            {
+                id: '1',
+                title: 'Orientation Day',
+                start: new Date(new Date().setHours(10, 0, 0, 0)),
+                end: new Date(new Date().setHours(15, 0, 0, 0)),
+                location: 'Main Auditorium',
+                category: 'academic',
+                description: 'Welcome event for new students',
+                participants: ['all', 'faculty']
+            },
+            {
+                id: '2',
+                title: 'Sports Day',
+                start: new Date(new Date().setDate(new Date().getDate() + 2)),
+                end: new Date(new Date().setDate(new Date().getDate() + 2)),
+                location: 'Sports Complex',
+                category: 'sports',
+                description: 'Annual inter-department sports competition',
+                participants: ['all']
+            },
+            {
+                id: '3',
+                title: 'Faculty Meeting',
+                start: new Date(new Date().setDate(new Date().getDate() + 5)),
+                end: new Date(new Date().setDate(new Date().getDate() + 5)),
+                location: 'Conference Room A',
+                category: 'meeting',
+                description: 'Monthly faculty meeting to discuss academic progress',
+                participants: ['faculty']
+            }
+        ];
+
+        // DOM Elements
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const addEventModal = document.getElementById('addEventModal');
+        const eventDetailsModal = document.getElementById('eventDetailsModal');
+        const addEventForm = document.getElementById('addEventForm');
+        const upcomingEventsList = document.getElementById('upcomingEvents');
+        const monthViewBtn = document.getElementById('monthView');
+        const weekViewBtn = document.getElementById('weekView');
+        const dayViewBtn = document.getElementById('dayView');
+        const listViewBtn = document.getElementById('listView');
+
+        // Initialize FullCalendar
+        let calendar;
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.getElementById('calendar');
+            
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay,listMonth'
+                },
+                events: events.map(event => ({
+                    id: event.id,
+                    title: event.title,
+                    start: event.start,
+                    end: event.end,
+                    extendedProps: {
+                        location: event.location,
+                        category: event.category,
+                        description: event.description,
+                        participants: event.participants
+                    }
+                })),
+                eventClick: function(info) {
+                    showEventDetails(info.event);
+                },
+                eventDidMount: function(info) {
+                    // Add category color based on event type
+                    const category = info.event.extendedProps.category;
+                    let bgColor = '#3498db'; // default blue
+                    
+                    if (category === 'academic') bgColor = '#3498db';
+                    else if (category === 'cultural') bgColor = '#9b59b6';
+                    else if (category === 'sports') bgColor = '#e74c3c';
+                    else if (category === 'meeting') bgColor = '#f39c12';
+                    
+                    info.el.style.backgroundColor = bgColor;
+                    info.el.style.borderColor = bgColor;
+                }
+            });
+
+            calendar.render();
+            loadUpcomingEvents();
+        });
+
+        // Toggle mobile menu
+        menuToggle.addEventListener('click', function() {
+            navLinks.classList.toggle('active');
+        });
+
+        // View options
+        monthViewBtn.addEventListener('click', function() {
+            calendar.changeView('dayGridMonth');
+            updateActiveViewBtn(monthViewBtn);
+        });
+
+        weekViewBtn.addEventListener('click', function() {
+            calendar.changeView('timeGridWeek');
+            updateActiveViewBtn(weekViewBtn);
+        });
+
+        dayViewBtn.addEventListener('click', function() {
+            calendar.changeView('timeGridDay');
+            updateActiveViewBtn(dayViewBtn);
+        });
+
+        listViewBtn.addEventListener('click', function() {
+            calendar.changeView('listMonth');
+            updateActiveViewBtn(listViewBtn);
+        });
+
+        function updateActiveViewBtn(activeBtn) {
+            [monthViewBtn, weekViewBtn, dayViewBtn, listViewBtn].forEach(btn => {
+                btn.classList.remove('active');
+            });
+            activeBtn.classList.add('active');
+        }
+
+        // Modal functions
+        function showAddEventForm() {
+            addEventModal.style.display = 'flex';
+        }
+
+        function showEventDetails(event) {
+            const modal = eventDetailsModal;
+            const extendedProps = event.extendedProps;
+            
+            document.getElementById('eventDetailsTitle').textContent = event.title;
+            document.getElementById('eventDetailsDate').textContent = 
+                `${event.start ? event.start.toLocaleString() : 'N/A'} - ${event.end ? event.end.toLocaleString() : 'N/A'}`;
+            document.getElementById('eventDetailsLocation').textContent = extendedProps.location || 'Not specified';
+            document.getElementById('eventDetailsCategory').textContent = 
+                extendedProps.category ? extendedProps.category.charAt(0).toUpperCase() + extendedProps.category.slice(1) : 'Not specified';
+            document.getElementById('eventDetailsDescription').textContent = extendedProps.description || 'No description provided';
+            
+            const participantsList = document.getElementById('eventDetailsParticipants');
+            participantsList.innerHTML = '';
+            
+            if (extendedProps.participants && extendedProps.participants.length > 0) {
+                extendedProps.participants.forEach(participant => {
+                    const li = document.createElement('li');
+                    li.textContent = getParticipantName(participant);
+                    participantsList.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'No specific participants';
+                participantsList.appendChild(li);
+            }
+            
+            // Set up delete and edit buttons
+            document.getElementById('deleteEventBtn').onclick = function() {
+                if (confirm('Are you sure you want to delete this event?')) {
+                    deleteEvent(event.id);
+                    closeModal();
+                }
+            };
+            
+            document.getElementById('editEventBtn').onclick = function() {
+                closeModal();
+                editEvent(event);
+            };
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            addEventModal.style.display = 'none';
+            eventDetailsModal.style.display = 'none';
+        }
+
+        // Event form submission
+        addEventForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('eventTitle').value;
+            const startDate = new Date(document.getElementById('eventStartDate').value);
+            const endDate = new Date(document.getElementById('eventEndDate').value);
+            const location = document.getElementById('eventLocation').value;
+            const category = document.getElementById('eventCategory').value;
+            const description = document.getElementById('eventDescription').value;
+            const participants = Array.from(document.getElementById('eventParticipants').selectedOptions)
+                .map(option => option.value);
+            
+            const newEvent = {
+                id: Date.now().toString(),
+                title,
+                start: startDate,
+                end: endDate,
+                location,
+                category,
+                description,
+                participants
+            };
+            
+            events.push(newEvent);
+            calendar.addEvent({
+                id: newEvent.id,
+                title: newEvent.title,
+                start: newEvent.start,
+                end: newEvent.end,
+                extendedProps: {
+                    location: newEvent.location,
+                    category: newEvent.category,
+                    description: newEvent.description,
+                    participants: newEvent.participants
+                }
+            });
+            
+            loadUpcomingEvents();
+            closeModal();
+            addEventForm.reset();
+        });
+
+        // Helper functions
+        function getParticipantName(value) {
+            const names = {
+                'all': 'All Students',
+                'faculty': 'All Faculty',
+                'cs': 'Computer Science Department',
+                'ee': 'Electrical Engineering Department'
+            };
+            return names[value] || value;
+        }
+
+        function deleteEvent(eventId) {
+            events = events.filter(event => event.id !== eventId);
+            const calendarEvent = calendar.getEventById(eventId);
+            if (calendarEvent) calendarEvent.remove();
+            loadUpcomingEvents();
+        }
+
+        function editEvent(event) {
+            // For simplicity, we'll just delete and re-add with new values
+            // In a real app, you would have a proper edit form
+            deleteEvent(event.id);
+            
+            document.getElementById('eventTitle').value = event.title;
+            document.getElementById('eventStartDate').value = formatDateTimeForInput(event.start);
+            document.getElementById('eventEndDate').value = formatDateTimeForInput(event.end);
+            document.getElementById('eventLocation').value = event.extendedProps.location || '';
+            document.getElementById('eventCategory').value = event.extendedProps.category || 'academic';
+            document.getElementById('eventDescription').value = event.extendedProps.description || '';
+            
+            // Select participants
+            const participantSelect = document.getElementById('eventParticipants');
+            Array.from(participantSelect.options).forEach(option => {
+                option.selected = event.extendedProps.participants.includes(option.value);
+            });
+            
+            showAddEventForm();
+        }
+
+        function formatDateTimeForInput(date) {
+            if (!date) return '';
+            
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        function loadUpcomingEvents() {
+            upcomingEventsList.innerHTML = '';
+            
+            // Sort events by date
+            const sortedEvents = [...events].sort((a, b) => a.start - b.start);
+            
+            // Show next 5 events
+            const now = new Date();
+            const upcoming = sortedEvents.filter(event => event.start > now).slice(0, 5);
+            
+            if (upcoming.length === 0) {
+                upcomingEventsList.innerHTML = '<p>No upcoming events</p>';
+                return;
+            }
+            
+            upcoming.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'event-card';
+                eventCard.onclick = function() {
+                    const calendarEvent = calendar.getEventById(event.id);
+                    if (calendarEvent) showEventDetails(calendarEvent);
+                };
+                
+                const title = document.createElement('h4');
+                title.textContent = event.title;
+                
+                const date = document.createElement('div');
+                date.className = 'event-date';
+                date.textContent = event.start.toLocaleString();
+                
+                eventCard.appendChild(title);
+                eventCard.appendChild(date);
+                upcomingEventsList.appendChild(eventCard);
+            });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === addEventModal || event.target === eventDetailsModal) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

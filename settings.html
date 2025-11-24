@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings | College System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            z-index: -1;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+
+        .logo h1 {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a:hover {
+            background-color: #34495e;
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background-color: #34495e;
+        }
+
+        .user-profile img {
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 1000;
+            padding: 10px 0;
+        }
+
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+
+        .user-dropdown a {
+            color: #333;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #f5f5f5;
+            color: #2c3e50;
+        }
+
+        .user-dropdown a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-header h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .settings-status {
+            display: flex;
+            align-items: center;
+            color: #27ae60;
+            font-size: 0.9rem;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #27ae60;
+            margin-right: 8px;
+        }
+
+        .status-indicator.active {
+            background-color: #27ae60;
+        }
+
+        .status-indicator.inactive {
+            background-color: #e74c3c;
+        }
+
+        /* Tabs Styles */
+        .settings-tabs {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background-color: #f8f9fa;
+        }
+
+        .tab-btn {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: #555;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #2c3e50;
+            background-color: #e9ecef;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            font-weight: 600;
+            background-color: white;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h3 {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group input[type="password"],
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 0;
+            font-weight: normal;
+        }
+
+        .logo-upload {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-upload img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 20px;
+            border: 1px solid #ddd;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-icon {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-icon:hover {
+            color: #3498db;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            gap: 10px;
+        }
+
+        .backup-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 2rem;
+        }
+
+        /* Table Styles */
+        .backup-list table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .backup-list th,
+        .backup-list td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .backup-list th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .backup-list tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background-color: #2c3e50;
+                flex-direction: column;
+                padding: 1rem 0;
+                z-index: 100;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0;
+            }
+
+            .nav-links a {
+                padding: 15px 2rem;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .settings-status {
+                margin-top: 10px;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+
+            .tab-content {
+                padding: 1.5rem;
+            }
+
+            .logo-upload {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .logo-upload img {
+                margin-bottom: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 0.8rem 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .form-actions,
+            .backup-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <img src="img/Screenshot 2025-04-27 152655.png" alt="College Logo">
+            <h1>College Management System</h1>
+        </div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown"><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+            <li class="dropdown"><a href="faculty.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+            <li class="dropdown"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+            <li class="dropdown"><a href="finance.html"><i class="fas fa-money-bill-wave"></i> Finance</a></li>
+            <li class="dropdown"><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        </ul>
+        
+        <div class="user-profile">
+            
+            <span>Admin</span>
+            <div class="user-dropdown">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h2><i class="fas fa-cog"></i> System Settings</h2>
+            <div class="settings-status">
+                <span class="status-indicator active"></span>
+                <span>All changes saved</span>
+            </div>
+        </div>
+        
+        <div class="settings-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openSettingsTab('general')">General</button>
+                <button class="tab-btn" onclick="openSettingsTab('academic')">Academic</button>
+                <button class="tab-btn" onclick="openSettingsTab('notifications')">Notifications</button>
+                <button class="tab-btn" onclick="openSettingsTab('security')">Security</button>
+                <button class="tab-btn" onclick="openSettingsTab('backup')">Backup</button>
+            </div>
+            
+            <div id="general" class="tab-content active-tab">
+                <form id="generalSettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-university"></i> Institution Information</h3>
+                        <div class="form-group">
+                            <label for="institutionName">Institution Name</label>
+                            <input type="text" id="institutionName" value="College University">
+                        </div>
+                        <div class="form-group">
+                            <label for="institutionLogo">Institution Logo</label>
+                            <div class="logo-upload">
+                                <img src="https://via.placeholder.com/100" alt="Institution Logo" id="institutionLogoPreview">
+                                <input type="file" id="institutionLogoUpload" accept="image/*">
+                                <button type="button" class="btn btn-secondary" onclick="document.getElementById('institutionLogoUpload').click()">
+                                    Upload Logo
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="institutionAddress">Address</label>
+                            <textarea id="institutionAddress" rows="3">123 College Ave, Campus Town, CA 12345</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-globe"></i> System Preferences</h3>
+                        <div class="form-group">
+                            <label for="systemLanguage">Default Language</label>
+                            <select id="systemLanguage">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="systemTimezone">Timezone</label>
+                            <select id="systemTimezone">
+                                <option value="UTC-5">Eastern Time (UTC-5)</option>
+                                <option value="UTC-6">Central Time (UTC-6)</option>
+                                <option value="UTC-7">Mountain Time (UTC-7)</option>
+                                <option value="UTC-8">Pacific Time (UTC-8)</option>
+                            </select>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="maintenanceMode">
+                            <label for="maintenanceMode">Put system in maintenance mode</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="academic" class="tab-content">
+                <form id="academicSettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Academic Calendar</h3>
+                        <div class="form-group">
+                            <label for="academicYear">Academic Year</label>
+                            <input type="text" id="academicYear" value="2023-2024">
+                        </div>
+                        <div class="form-group">
+                            <label for="semesterStart">Semester Start Date</label>
+                            <input type="date" id="semesterStart" value="2023-09-01">
+                        </div>
+                        <div class="form-group">
+                            <label for="semesterEnd">Semester End Date</label>
+                            <input type="date" id="semesterEnd" value="2023-12-15">
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Grading System</h3>
+                        <div class="form-group">
+                            <label for="gradingScale">Grading Scale</label>
+                            <select id="gradingScale">
+                                <option value="percentage">Percentage (0-100%)</option>
+                                <option value="letter">Letter Grades (A-F)</option>
+                                <option value="gpa">GPA (0.0-4.0)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="passingGrade">Passing Grade</label>
+                            <input type="number" id="passingGrade" value="60" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="notifications" class="tab-content">
+                <form id="notificationSettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-envelope"></i> Email Notifications</h3>
+                        <div class="form-group">
+                            <label for="smtpHost">SMTP Host</label>
+                            <input type="text" id="smtpHost" value="smtp.college.edu">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtpPort">SMTP Port</label>
+                            <input type="number" id="smtpPort" value="587">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtpUsername">SMTP Username</label>
+                            <input type="text" id="smtpUsername" value="noreply@college.edu">
+                        </div>
+                        <div class="form-group">
+                            <label for="smtpPassword">SMTP Password</label>
+                            <input type="password" id="smtpPassword" placeholder="Enter password">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="smtpSSL" checked>
+                            <label for="smtpSSL">Use SSL/TLS</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-bell"></i> Notification Preferences</h3>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifyNewUser" checked>
+                            <label for="notifyNewUser">New user registrations</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifyPayment" checked>
+                            <label for="notifyPayment">Payment receipts</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifyAttendance" checked>
+                            <label for="notifyAttendance">Attendance alerts</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifyEvents" checked>
+                            <label for="notifyEvents">Upcoming events</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="security" class="tab-content">
+                <form id="securitySettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-shield-alt"></i> Authentication</h3>
+                        <div class="form-group">
+                            <label for="loginAttempts">Allowed Login Attempts</label>
+                            <input type="number" id="loginAttempts" value="5" min="1" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="lockoutTime">Account Lockout Time (minutes)</label>
+                            <input type="number" id="lockoutTime" value="30" min="1" max="1440">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="twoFactorAuth">
+                            <label for="twoFactorAuth">Enable Two-Factor Authentication</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-user-lock"></i> Password Policy</h3>
+                        <div class="form-group">
+                            <label for="minPasswordLength">Minimum Password Length</label>
+                            <input type="number" id="minPasswordLength" value="8" min="6" max="32">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="requireSpecialChar" checked>
+                            <label for="requireSpecialChar">Require special character</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="requireNumber" checked>
+                            <label for="requireNumber">Require number</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordExpiry">Password Expiry (days)</label>
+                            <input type="number" id="passwordExpiry" value="90" min="0" max="365">
+                            <small>Set to 0 to disable password expiry</small>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Reset</button>
+                        <button type="submit" class="btn btn-primary">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="backup" class="tab-content">
+                <form id="backupSettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-database"></i> Database Backup</h3>
+                        <div class="form-group">
+                            <label for="backupFrequency">Backup Frequency</label>
+                            <select id="backupFrequency">
+                                <option value="daily">Daily</option>
+                                <option value="weekly" selected>Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="backupTime">Backup Time</label>
+                            <input type="time" id="backupTime" value="02:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="backupLocation">Backup Location</label>
+                            <input type="text" id="backupLocation" value="/var/backups/college">
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="backupCloud" checked>
+                            <label for="backupCloud">Upload to cloud storage</label>
+                        </div>
+                    </div>
+                    
+                    <div class="backup-actions">
+                        <button type="button" class="btn btn-primary" onclick="createBackupNow()">
+                            <i class="fas fa-save"></i> Create Backup Now
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="restoreBackup()">
+                            <i class="fas fa-history"></i> Restore Backup
+                        </button>
+                    </div>
+                    
+                    <div class="backup-list">
+                        <h4>Recent Backups</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Size</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2023-06-15 02:00</td>
+                                    <td>45.2 MB</td>
+                                    <td>Full</td>
+                                    <td>
+                                        <button class="btn-icon"><i class="fas fa-download"></i></button>
+                                        <button class="btn-icon"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2023-06-08 02:00</td>
+                                    <td>44.8 MB</td>
+                                    <td>Full</td>
+                                    <td>
+                                        <button class="btn-icon"><i class="fas fa-download"></i></button>
+                                        <button class="btn-icon"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            
+            menuToggle.addEventListener('click', function() {
+                navLinks.classList.toggle('active');
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.user-profile') && !event.target.closest('.user-dropdown')) {
+                    const dropdowns = document.querySelectorAll('.user-dropdown');
+                    dropdowns.forEach(dropdown => {
+                        dropdown.style.display = 'none';
+                    });
+                }
+            });
+            
+            // Tab functionality
+            window.openSettingsTab = function(tabName) {
+                const tabContents = document.getElementsByClassName('tab-content');
+                for (let i = 0; i < tabContents.length; i++) {
+                    tabContents[i].classList.remove('active-tab');
+                }
+                
+                const tabButtons = document.getElementsByClassName('tab-btn');
+                for (let i = 0; i < tabButtons.length; i++) {
+                    tabButtons[i].classList.remove('active');
+                }
+                
+                document.getElementById(tabName).classList.add('active-tab');
+                event.currentTarget.classList.add('active');
+            }
+            
+            // Logo upload preview
+            document.getElementById('institutionLogoUpload').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('institutionLogoPreview').src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Form submissions
+            document.getElementById('generalSettingsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSaveSuccess();
+            });
+            
+            document.getElementById('academicSettingsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSaveSuccess();
+            });
+            
+            document.getElementById('notificationSettingsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSaveSuccess();
+            });
+            
+            document.getElementById('securitySettingsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSaveSuccess();
+            });
+            
+            document.getElementById('backupSettingsForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showSaveSuccess();
+            });
+            
+            function showSaveSuccess() {
+                const statusIndicator = document.querySelector('.status-indicator');
+                const statusText = document.querySelector('.settings-status span:last-child');
+                
+                statusIndicator.classList.add('active');
+                statusText.textContent = 'All changes saved';
+                
+                setTimeout(() => {
+                    statusIndicator.classList.remove('active');
+                    statusText.textContent = 'Changes not saved';
+                }, 3000);
+            }
+            
+            // Backup functions
+            window.createBackupNow = function() {
+                alert('Backup process started. This may take a few minutes.');
+                // In a real application, this would trigger an API call to create a backup
+            }
+            
+            window.restoreBackup = function() {
+                alert('Please select a backup file to restore.');
+                // In a real application, this would open a file dialog and then trigger a restore process
+            }
+        });
+    </script>
+</body>
+</html>

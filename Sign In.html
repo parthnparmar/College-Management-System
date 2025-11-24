@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>College Management System - Sign In</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background-image: url('https://images.unsplash.com/photo-1580587771525-78b9dba3b914');
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .login-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 50px 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      z-index: 1;
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .login-container h2 {
+      margin-bottom: 25px;
+      color: #2e86de;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+
+    .input-group {
+      margin: 20px 0;
+      text-align: left;
+      position: relative;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      font-size: 16px;
+      background: #f7f7f7;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+      border-color: #2e86de;
+      background: #fff;
+      box-shadow: 0 0 5px rgba(46, 134, 222, 0.5);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      border: none;
+      background: linear-gradient(135deg, #2e86de, #1e5fad);
+      color: white;
+      font-size: 17px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .login-btn:hover {
+      background: linear-gradient(135deg, #1e5fad, #2e86de);
+      transform: translateY(-3px);
+    }
+
+    .error-message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+      min-height: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .login-container {
+        padding: 35px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>College Management System</h2>
+    <div class="input-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="Enter your username">
+    </div>
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter your password">
+    </div>
+    <button class="login-btn" onclick="signIn()">Sign In</button>
+    <div class="error-message" id="error-message"></div>
+  </div>
+
+  <script>
+    function signIn() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const error = document.getElementById("error-message");
+
+      const dummyUser = "admin";
+      const dummyPass = "admin123";
+
+      if (!username || !password) {
+        error.style.color = "red";
+        error.textContent = "Please fill in all fields.";
+        return;
+      }
+
+      if (username === dummyUser && password === dummyPass) {
+        error.style.color = "green";
+        error.textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+          alert("Welcome to the Dashboard!");
+          error.textContent = "";
+        }, 1000);
+      } else {
+        error.style.color = "red";
+        error.textContent = "Invalid username or password.";
+      }
+    }
+  </script>
+</body>
+</html>

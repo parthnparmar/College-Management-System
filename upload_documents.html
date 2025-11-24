@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Upload Documents - College Management</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1522075469751-3a6694fb2f61') no-repeat center center/cover;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 650px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2 {
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    input[type="file"] {
+      flex-grow: 1;
+      padding: 10px;
+      border: 2px dashed #3498db;
+      border-radius: 10px;
+      background: #f9f9f9;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    input[type="file"]:hover {
+      background: #eef6fb;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    #fileList {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+
+    #fileList li {
+      background: #ecf0f1;
+      margin: 10px 0;
+      padding: 14px 20px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .file-actions button {
+      margin-left: 8px;
+      background: #e74c3c;
+      border: none;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    .file-actions button:hover {
+      background: #c0392b;
+    }
+
+    .file-actions button.download {
+      background-color: #2ecc71;
+    }
+
+    .file-actions button.download:hover {
+      background-color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📤 Upload Documents</h1>
+
+    <form id="uploadForm">
+      <input type="file" id="fileInput" multiple required />
+      <button type="submit">Upload</button>
+    </form>
+
+    <h2>📑 Uploaded Files</h2>
+    <ul id="fileList"></ul>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+
+    let uploadedFiles = [];
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const files = Array.from(fileInput.files);
+      uploadedFiles.push(...files);
+      renderFileList();
+      fileInput.value = '';
+    });
+
+    function renderFileList() {
+      fileList.innerHTML = '';
+      uploadedFiles.forEach((file, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span>${file.name}</span>
+          <div class="file-actions">
+            <button class="download" onclick="downloadFile(${index})">Download</button>
+            <button onclick="deleteFile(${index})">Delete</button>
+          </div>
+        `;
+        fileList.appendChild(li);
+      });
+    }
+
+    function downloadFile(index) {
+      const file = uploadedFiles[index];
+      const url = URL.createObjectURL(file);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function deleteFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFileList();
+    }
+  </script>
+</body>
+</html>

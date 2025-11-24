@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Management | College System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .logo img {
+            margin-right: 15px;
+            border-radius: 50%;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+        }
+
+        .nav-links .active a {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .user-dropdown a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 95%;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+
+        .page-header h2 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        /* Finance Overview Styles */
+        .finance-overview {
+            margin-bottom: 2rem;
+        }
+
+        .overview-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .overview-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .overview-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .overview-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .income .overview-icon {
+            background-color: #2ecc71;
+        }
+
+        .expense .overview-icon {
+            background-color: #e74c3c;
+        }
+
+        .balance .overview-icon {
+            background-color: #3498db;
+        }
+
+        .overview-info h3 {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+
+        .overview-info p {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .finance-chart {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            height: 400px;
+        }
+
+        /* Tabs Styles */
+        .finance-tabs {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #7f8c8d;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
+        /* Search and Filter Styles */
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #95a5a6;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.6rem 1rem 0.6rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .filter-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-options select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: white;
+            min-width: 150px;
+        }
+
+        /* Table Styles */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-paid {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-unpaid {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-partial {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #3498db;
+            margin-right: 10px;
+            font-size: 1rem;
+            transition: color 0.3s;
+        }
+
+        .action-btn:hover {
+            color: #2980b9;
+        }
+
+        .action-btn.delete {
+            color: #e74c3c;
+        }
+
+        .action-btn.delete:hover {
+            color: #c0392b;
+        }
+
+        .table-footer {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1rem;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pagination button {
+            background: none;
+            border: 1px solid #ddd;
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .pagination button:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #95a5a6;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #e74c3c;
+        }
+
+        .modal h3 {
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            font-size: 1.5rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .transaction-fields {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 1.2rem;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 70px);
+                background-color: #2c3e50;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 2rem;
+                transition: left 0.3s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 1rem 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .overview-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <img src="img/Screenshot 2025-04-27 152655.png" alt="College Logo">
+            <h1>College Management System</h1>
+        </div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown"><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+            <li class="dropdown"><a href="faculty.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+            <li class="dropdown"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+            <li class="dropdown active"><a href="finance.html"><i class="fas fa-money-bill-wave"></i> Finance</a></li>
+            <li><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        </ul>
+        
+        <div class="user-profile">
+            <img src="img/Screenshot 2024-06-23 184613.png" alt="User Profile">
+            <span>Admin</span>
+            <div class="user-dropdown">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h2><i class="fas fa-money-bill-wave"></i> Finance Management</h2>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="showAddTransactionForm()">
+                    <i class="fas fa-plus"></i> Add Transaction
+                </button>
+                <button class="btn btn-secondary" onclick="generateFinanceReport()">
+                    <i class="fas fa-file-export"></i> Generate Report
+                </button>
+            </div>
+        </div>
+        
+        <div class="finance-overview">
+            <div class="overview-cards">
+                <div class="overview-card income">
+                    <div class="overview-icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <div class="overview-info">
+                        <h3>Total Income</h3>
+                        <p id="totalIncome">125,430.00</p>
+                    </div>
+                </div>
+                <div class="overview-card expense">
+                    <div class="overview-icon"><i class="fas fa-receipt"></i></div>
+                    <div class="overview-info">
+                        <h3>Total Expenses</h3>
+                        <p id="totalExpense">78,920.50</p>
+                    </div>
+                </div>
+                <div class="overview-card balance">
+                    <div class="overview-icon"><i class="fas fa-piggy-bank"></i></div>
+                    <div class="overview-info">
+                        <h3>Current Balance</h3>
+                        <p id="currentBalance">46,509.50</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="finance-chart">
+                <canvas id="financeChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="finance-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openTab('fees')">Student Fees</button>
+                <button class="tab-btn" onclick="openTab('salaries')">Salaries</button>
+                <button class="tab-btn" onclick="openTab('expenses')">Other Expenses</button>
+            </div>
+            
+            <div id="fees" class="tab-content active-tab">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="feesSearch" placeholder="Search fee records...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="feesStatusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="paid">Paid</option>
+                            <option value="unpaid">Unpaid</option>
+                            <option value="partial">Partial</option>
+                        </select>
+                        <select id="feesSemesterFilter">
+                            <option value="">All Semesters</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="feesTable">
+                        <thead>
+                            <tr>
+                                <th>Receipt No.</th>
+                                <th>Student</th>
+                                <th>Semester</th>
+                                <th>Amount</th>
+                                <th>Paid</th>
+                                <th>Balance</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>F-2023-001</td>
+                                <td>John Doe</td>
+                                <td>1</td>
+                                <td>1,200.00</td>
+                                <td>1,200.00</td>
+                                <td>0.00</td>
+                                <td>15-09-2023</td>
+                                <td><span class="status status-paid">Paid</span></td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F-2023-002</td>
+                                <td>Jane Smith</td>
+                                <td>1</td>
+                                <td>1,200.00</td>
+                                <td>600.00</td>
+                                <td>600.00</td>
+                                <td>15-09-2023</td>
+                                <td><span class="status status-partial">Partial</span></td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>F-2023-003</td>
+                                <td>Robert Johnson</td>
+                                <td>2</td>
+                                <td>1,200.00</td>
+                                <td>0.00</td>
+                                <td>1,200.00</td>
+                                <td>15-02-2024</td>
+                                <td><span class="status status-unpaid">Unpaid</span></td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageInfo">Page 1 of 5</span>
+                            <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="salaries" class="tab-content">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="salariesSearch" placeholder="Search salary records...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="salariesMonthFilter">
+                            <option value="">All Months</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                        <select id="salariesYearFilter">
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="salariesTable">
+                        <thead>
+                            <tr>
+                                <th>Payment ID</th>
+                                <th>Faculty</th>
+                                <th>Position</th>
+                                <th>Basic Salary</th>
+                                <th>Allowances</th>
+                                <th>Deductions</th>
+                                <th>Net Salary</th>
+                                <th>Payment Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SAL-2023-001</td>
+                                <td>Dr. Sarah Williams</td>
+                                <td>Professor</td>
+                                <td>5,000.00</td>
+                                <td>500.00</td>
+                                <td>200.00</td>
+                                <td>5,300.00</td>
+                                <td>30-09-2023</td>
+                                <td><span class="status status-paid">Paid</span></td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>SAL-2023-002</td>
+                                <td>Mr. David Brown</td>
+                                <td>Associate Professor</td>
+                                <td>4,000.00</td>
+                                <td>400.00</td>
+                                <td>150.00</td>
+                                <td>4,250.00</td>
+                                <td>30-09-2023</td>
+                                <td><span class="status status-paid">Paid</span></td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageInfo">Page 1 of 3</span>
+                            <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="expenses" class="tab-content">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="expensesSearch" placeholder="Search expense records...">
+                    </div>
+                    <div class="filter-options">
+                        <select id="expensesCategoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="stationary">Stationary</option>
+                            <option value="maintenance">Maintenance</option>
+                            <option value="events">Events</option>
+                            <option value="utilities">Utilities</option>
+                        </select>
+                        <select id="expensesMonthFilter">
+                            <option value="">All Months</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="expensesTable">
+                        <thead>
+                            <tr>
+                                <th>Voucher No.</th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Payment Method</th>
+                                <th>Date</th>
+                                <th>Approved By</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>EXP-2023-001</td>
+                                <td>Stationary</td>
+                                <td>Office supplies for admin department</td>
+                                <td>250.00</td>
+                                <td>Bank Transfer</td>
+                                <td>05-09-2023</td>
+                                <td>Dr. Sarah Williams</td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EXP-2023-002</td>
+                                <td>Maintenance</td>
+                                <td>Repair of computer lab equipment</td>
+                                <td>1,200.00</td>
+                                <td>Check</td>
+                                <td>12-09-2023</td>
+                                <td>Mr. David Brown</td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EXP-2023-003</td>
+                                <td>Events</td>
+                                <td>Annual college fest decorations</td>
+                                <td>750.00</td>
+                                <td>Cash</td>
+                                <td>20-09-2023</td>
+                                <td>Dr. Sarah Williams</td>
+                                <td>
+                                    <button class="action-btn" title="View"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn" title="Edit"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Delete"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                            <span id="pageInfo">Page 1 of 2</span>
+                            <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Add Transaction Modal -->
+        <div id="addTransactionModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h3>Add New Transaction</h3>
+                <form id="addTransactionForm">
+                    <div class="form-group">
+                        <label for="transactionType">Transaction Type</label>
+                        <select id="transactionType" required onchange="toggleTransactionFields()">
+                            <option value="">Select Type</option>
+                            <option value="fee">Student Fee</option>
+                            <option value="salary">Salary Payment</option>
+                            <option value="expense">Expense</option>
+                            <option value="income">Other Income</option>
+                        </select>
+                    </div>
+                    
+                    <div id="feeFields" class="transaction-fields" style="display:none;">
+                        <div class="form-group">
+                            <label for="studentSelect">Student</label>
+                            <select id="studentSelect">
+                                <option value="">Select Student</option>
+                                <option value="1">John Doe (ID: S001)</option>
+                                <option value="2">Jane Smith (ID: S002)</option>
+                                <option value="3">Robert Johnson (ID: S003)</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="feeSemester">Semester</label>
+                                <select id="feeSemester">
+                                    <option value="1">Semester 1</option>
+                                    <option value="2">Semester 2</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="feeAmount">Amount</label>
+                                <input type="number" id="feeAmount" step="0.01" placeholder="0.00">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="salaryFields" class="transaction-fields" style="display:none;">
+                        <div class="form-group">
+                            <label for="facultySelect">Faculty Member</label>
+                            <select id="facultySelect">
+                                <option value="">Select Faculty</option>
+                                <option value="1">Dr. Sarah Williams</option>
+                                <option value="2">Mr. David Brown</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="basicSalary">Basic Salary</label>
+                                <input type="number" id="basicSalary" step="0.01" placeholder="0.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="allowances">Allowances</label>
+                                <input type="number" id="allowances" step="0.01" placeholder="0.00">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="deductions">Deductions</label>
+                            <input type="number" id="deductions" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div id="expenseFields" class="transaction-fields" style="display:none;">
+                        <div class="form-group">
+                            <label for="expenseCategory">Category</label>
+                            <select id="expenseCategory">
+                                <option value="stationary">Stationary</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="events">Events</option>
+                                <option value="utilities">Utilities</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="expenseDescription">Description</label>
+                            <input type="text" id="expenseDescription" placeholder="Enter description">
+                        </div>
+                        <div class="form-group">
+                            <label for="expenseAmount">Amount</label>
+                            <input type="number" id="expenseAmount" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div id="incomeFields" class="transaction-fields" style="display:none;">
+                        <div class="form-group">
+                            <label for="incomeSource">Income Source</label>
+                            <input type="text" id="incomeSource" placeholder="Enter income source">
+                        </div>
+                        <div class="form-group">
+                            <label for="incomeDescription">Description</label>
+                            <input type="text" id="incomeDescription" placeholder="Enter description">
+                        </div>
+                        <div class="form-group">
+                            <label for="incomeAmount">Amount</label>
+                            <input type="number" id="incomeAmount" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="transactionDate">Date</label>
+                            <input type="date" id="transactionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paymentMethod">Payment Method</label>
+                            <select id="paymentMethod" required>
+                                <option value="cash">Cash</option>
+                                <option value="check">Check</option>
+                                <option value="bank">Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transactionNotes">Notes</label>
+                        <textarea id="transactionNotes" rows="3" placeholder="Additional notes..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Transaction</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Tab functionality
+        function openTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active-tab');
+            
+            // Add active class to the clicked button
+            event.currentTarget.classList.add('active');
+        }
+
+        // Modal functions
+        function showAddTransactionForm() {
+            document.getElementById('addTransactionModal').style.display = 'flex';
+            // Set default date to today
+            document.getElementById('transactionDate').valueAsDate = new Date();
+        }
+
+        function closeModal() {
+            document.getElementById('addTransactionModal').style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('addTransactionModal')) {
+                closeModal();
+            }
+        }
+
+        // Toggle transaction fields based on selected type
+        function toggleTransactionFields() {
+            const type = document.getElementById('transactionType').value;
+            
+            // Hide all fields first
+            document.querySelectorAll('.transaction-fields').forEach(field => {
+                field.style.display = 'none';
+            });
+            
+            // Show the relevant fields
+            if (type === 'fee') {
+                document.getElementById('feeFields').style.display = 'block';
+            } else if (type === 'salary') {
+                document.getElementById('salaryFields').style.display = 'block';
+            } else if (type === 'expense') {
+                document.getElementById('expenseFields').style.display = 'block';
+            } else if (type === 'income') {
+                document.getElementById('incomeFields').style.display = 'block';
+            }
+        }
+
+        // Form submission
+        document.getElementById('addTransactionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Transaction added successfully!');
+            closeModal();
+            // Here you would typically send the data to your backend
+        });
+
+        // Generate finance report
+        function generateFinanceReport() {
+            alert('Finance report generated and downloaded!');
+            // In a real application, this would generate and download a report
+        }
+
+        // Initialize finance chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('financeChart').getContext('2d');
+            const financeChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: [12000, 19000, 15000, 18000, 20000, 15000, 22000, 18000, 21000],
+                            backgroundColor: 'rgba(46, 204, 113, 0.7)',
+                            borderColor: 'rgba(46, 204, 113, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [8000, 12000, 10000, 11000, 15000, 12000, 18000, 14000, 16000],
+                            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+                            borderColor: 'rgba(231, 76, 60, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': $' + context.raw.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+
+        // Search functionality for each table
+        document.getElementById('feesSearch').addEventListener('input', function() {
+            filterTable('feesTable', this.value.toLowerCase());
+        });
+
+        document.getElementById('salariesSearch').addEventListener('input', function() {
+            filterTable('salariesTable', this.value.toLowerCase());
+        });
+
+        document.getElementById('expensesSearch').addEventListener('input', function() {
+            filterTable('expensesTable', this.value.toLowerCase());
+        });
+
+        function filterTable(tableId, searchText) {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) { // Start from 1 to skip header
+                const row = rows[i];
+                let found = false;
+                
+                for (let j = 0; j < row.cells.length - 1; j++) { // Skip last cell (actions)
+                    const cell = row.cells[j];
+                    if (cell.textContent.toLowerCase().includes(searchText)) {
+                        found = true;
+                        break;
+                    }
+                }
+                
+                row.style.display = found ? '' : 'none';
+            }
+        }
+
+        // Filter functionality
+        document.getElementById('feesStatusFilter').addEventListener('change', function() {
+            filterTableByStatus('feesTable', this.value);
+        });
+
+        document.getElementById('feesSemesterFilter').addEventListener('change', function() {
+            filterTableByColumn('feesTable', 2, this.value); // Column index 2 is Semester
+        });
+
+        document.getElementById('salariesMonthFilter').addEventListener('change', function() {
+            // In a real app, you would filter by month from the date column
+        });
+
+        document.getElementById('expensesCategoryFilter').addEventListener('change', function() {
+            filterTableByColumn('expensesTable', 1, this.value); // Column index 1 is Category
+        });
+
+        function filterTableByStatus(tableId, status) {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const statusCell = row.cells[7]; // Column index 7 is Status
+                
+                if (!status || statusCell.textContent.toLowerCase().includes(status)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+
+        function filterTableByColumn(tableId, columnIndex, value) {
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+            
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                const cell = row.cells[columnIndex];
+                
+                if (!value || cell.textContent.toLowerCase().includes(value.toLowerCase())) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

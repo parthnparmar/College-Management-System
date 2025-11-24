@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile | College System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-image: url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a i {
+            margin-right: 8px;
+        }
+
+        .nav-links a:hover {
+            color: #3498db;
+        }
+
+        .nav-links .active a {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-profile img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .user-dropdown a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .user-profile:hover .user-dropdown {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 95%;
+        }
+
+        /* Profile Header Styles */
+        .profile-header {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-avatar {
+            text-align: center;
+            flex: 0 0 200px;
+        }
+
+        .profile-avatar img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1rem;
+            border: 5px solid #ecf0f1;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .profile-info h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #3498db;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            min-width: 80px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+        }
+
+        /* Profile Tabs Styles */
+        .profile-tabs {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #7f8c8d;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+        }
+
+        .tab-content.active-tab {
+            display: block;
+        }
+
+        /* Profile Section Styles */
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+
+        .profile-section h3 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-section h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-item label {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .info-item p {
+            font-size: 1rem;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        /* Education & Experience Styles */
+        .education-item, .experience-item {
+            background-color: #f8f9fa;
+            padding: 1.2rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .education-item h4, .experience-item h4 {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .institution, .company {
+            font-size: 0.9rem;
+            color: #3498db;
+            margin-bottom: 0.3rem;
+        }
+
+        .duration {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-bottom: 0.5rem;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #34495e;
+            line-height: 1.5;
+        }
+
+        /* Activity Tab Styles */
+        .activity-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-filters select {
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background-color: white;
+            min-width: 150px;
+        }
+
+        .activity-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            align-items: flex-start;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #3498db;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-description {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: #95a5a6;
+        }
+
+        /* Settings Tab Styles */
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+        }
+
+        .form-section h3 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-group input {
+            margin-right: 10px;
+            width: auto;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 70px);
+                background-color: #2c3e50;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 2rem;
+                transition: left 0.3s ease;
+            }
+
+            .nav-links.active {
+                left: 0;
+            }
+
+            .nav-links li {
+                margin: 1rem 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-stats {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .tabs-header {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .activity-filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            
+            <h1>College Management System</h1>
+        </div>
+        
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+            <li class="dropdown"><a href="students.html"><i class="fas fa-user-graduate"></i> Students</a></li>
+            <li class="dropdown"><a href="faculty.html"><i class="fas fa-chalkboard-teacher"></i> Faculty</a></li>
+            <li class="dropdown"><a href="courses.html"><i class="fas fa-book"></i> Courses</a></li>
+            <li class="dropdown"><a href="finance.html"><i class="fas fa-money-bill-wave"></i> Finance</a></li>
+            <li class="dropdown"><a href="events.html"><i class="fas fa-calendar-alt"></i> Events</a></li>
+        </ul>
+        
+        <div class="user-profile">
+            <img src="img/Screenshot 2024-06-23 184613.png" alt="User Profile">
+            <span>Admin</span>
+            <div class="user-dropdown">
+                <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                <a href="login.html"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <img src="img/Screenshot 2024-06-23 184613.png" alt="Profile Picture" id="profilePicture">
+                <button class="btn btn-secondary" onclick="document.getElementById('uploadAvatar').click()">
+                    <i class="fas fa-camera"></i> Change Photo
+                </button>
+                <input type="file" id="uploadAvatar" accept="image/*" style="display: none;">
+            </div>
+            <div class="profile-info">
+                <h2 id="profileName">John Doe</h2>
+                <p class="profile-role" id="profileRole">Administrator</p>
+                <p class="profile-email" id="profileEmail">john.doe@college.edu</p>
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="statYears">5</span>
+                        <span class="stat-label">Years</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="statDepartment">3</span>
+                        <span class="stat-label">Departments</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="statActivities">42</span>
+                        <span class="stat-label">Activities</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-tabs">
+            <div class="tabs-header">
+                <button class="tab-btn active" onclick="openProfileTab('overview')">Overview</button>
+                <button class="tab-btn" onclick="openProfileTab('activity')">Activity</button>
+                <button class="tab-btn" onclick="openProfileTab('settings')">Settings</button>
+            </div>
+            
+            <div id="overview" class="tab-content active-tab">
+                <div class="profile-section">
+                    <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Full Name</label>
+                            <p id="infoFullName">John Doe</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Date of Birth</label>
+                            <p id="infoDob">January 15, 1985</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Gender</label>
+                            <p id="infoGender">Male</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Phone</label>
+                            <p id="infoPhone">(123) 456-7890</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Address</label>
+                            <p id="infoAddress">123 College Ave, Campus Town</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Joined Date</label>
+                            <p id="infoJoined">September 1, 2018</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+                    <div class="education-item">
+                        <h4>Master of Computer Science</h4>
+                        <p class="institution">State University</p>
+                        <p class="duration">2010 - 2012</p>
+                    </div>
+                    <div class="education-item">
+                        <h4>Bachelor of Science</h4>
+                        <p class="institution">City College</p>
+                        <p class="duration">2006 - 2010</p>
+                    </div>
+                </div>
+                
+                <div class="profile-section">
+                    <h3><i class="fas fa-briefcase"></i> Experience</h3>
+                    <div class="experience-item">
+                        <h4>System Administrator</h4>
+                        <p class="company">College University</p>
+                        <p class="duration">2018 - Present</p>
+                        <p class="description">Managing college management system and IT infrastructure.</p>
+                    </div>
+                    <div class="experience-item">
+                        <h4>IT Support Specialist</h4>
+                        <p class="company">Tech Solutions Inc.</p>
+                        <p class="duration">2012 - 2018</p>
+                        <p class="description">Provided technical support and system administration for corporate clients.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="activity" class="tab-content">
+                <div class="activity-filters">
+                    <select id="activityTypeFilter">
+                        <option value="all">All Activities</option>
+                        <option value="login">Logins</option>
+                        <option value="update">Updates</option>
+                        <option value="create">Creations</option>
+                    </select>
+                    <select id="activityTimeFilter">
+                        <option value="30">Last 30 Days</option>
+                        <option value="90">Last 90 Days</option>
+                        <option value="365">Last Year</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+                
+                <div class="activity-list" id="activityList">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4 class="activity-title">User Login</h4>
+                            <p class="activity-description">Logged in to the system from IP 192.168.1.1</p>
+                            <p class="activity-time">Today, 10:45 AM</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4 class="activity-title">Profile Updated</h4>
+                            <p class="activity-description">Updated personal information</p>
+                            <p class="activity-time">Yesterday, 3:22 PM</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4 class="activity-title">New Student Created</h4>
+                            <p class="activity-description">Added new student: Jane Smith (ID: S2023001)</p>
+                            <p class="activity-time">September 15, 2023, 9:30 AM</p>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-file-export"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4 class="activity-title">Report Generated</h4>
+                            <p class="activity-description">Exported student enrollment report</p>
+                            <p class="activity-time">September 10, 2023, 2:15 PM</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="settings" class="tab-content">
+                <form id="profileSettingsForm">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user-cog"></i> Account Settings</h3>
+                        <div class="form-group">
+                            <label for="settingUsername">Username</label>
+                            <input type="text" id="settingUsername" value="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingEmail">Email</label>
+                            <input type="email" id="settingEmail" value="john.doe@college.edu">
+                        </div>
+                        <div class="form-group">
+                            <label for="settingLanguage">Language</label>
+                            <select id="settingLanguage">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="fr">French</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-lock"></i> Password</h3>
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" id="confirmPassword">
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-bell"></i> Notifications</h3>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifyEmail" checked>
+                            <label for="notifyEmail">Email Notifications</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifySystem" checked>
+                            <label for="notifySystem">System Notifications</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="notifySMS">
+                            <label for="notifySMS">SMS Notifications</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Tab functionality
+        function openProfileTab(tabId) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active-tab');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show the selected tab content
+            document.getElementById(tabId).classList.add('active-tab');
+            
+            // Add active class to the clicked button
+            event.currentTarget.classList.add('active');
+        }
+
+        // Profile picture upload
+        document.getElementById('uploadAvatar').addEventListener('change', function(e) {
+            if (e.target.files && e.target.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    document.getElementById('profilePicture').src = event.target.result;
+                }
+                
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Activity filters
+        document.getElementById('activityTypeFilter').addEventListener('change', function() {
+            filterActivities();
+        });
+
+        document.getElementById('activityTimeFilter').addEventListener('change', function() {
+            filterActivities();
+        });
+
+        function filterActivities() {
+            const typeFilter = document.getElementById('activityTypeFilter').value;
+            const timeFilter = document.getElementById('activityTimeFilter').value;
+            
+            // In a real application, this would filter the activities from your data source
+            console.log(`Filtering by type: ${typeFilter}, time: ${timeFilter}`);
+        }
+
+        // Form submission
+        document.getElementById('profileSettingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate password change if fields are filled
+            const currentPass = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            
+            if (newPass || confirmPass) {
+                if (newPass !== confirmPass) {
+                    alert('New password and confirmation do not match!');
+                    return;
+                }
+                
+                if (!currentPass) {
+                    alert('Please enter your current password to change it.');
+                    return;
+                }
+                
+                if (newPass.length < 8) {
+                    alert('Password must be at least 8 characters long.');
+                    return;
+                }
+            }
+            
+            // In a real application, you would send this data to your backend
+            alert('Settings saved successfully!');
+            
+            // Reset password fields
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        });
+
+        // Load sample activities (in a real app, this would come from an API)
+        function loadActivities() {
+            // Activities are hardcoded in the HTML for this example
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadActivities();
+            
+            // Set today's date as default for any date fields
+            const today = new Date();
+            document.getElementById('infoJoined').textContent = formatDate(today);
+        });
+
+        // Helper function to format dates
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+    </script>
+</body>
+</html>
